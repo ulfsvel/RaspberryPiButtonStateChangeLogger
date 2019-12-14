@@ -2,8 +2,6 @@ import json
 
 import boto3
 
-rds_client = boto3.client('rds-data', region_name='eu-west-1')
-
 CREATE_QUERY = '''
 CREATE TABLE IF NOT EXISTS `log` (
 	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -24,7 +22,20 @@ INSERT INTO `log` (`event_type`, `event_data`) VALUES (:event_type, :event_data)
 
 class Logger:
 
-    def __init__(self, db_credentials_secrets_store_arn, db_cluster_arn, database_name):
+    def __init__(
+            self,
+            db_credentials_secrets_store_arn,
+            db_cluster_arn,
+            database_name,
+            aws_access_key,
+            aws_secret_access_key
+    ):
+        self._rds_client = boto3.client(
+            'rds-data',
+            region_name='eu-west-1',
+            aws_access_key_id=aws_access_key,
+            aws_secret_access_key=aws_secret_access_key,
+        )
         self._db_credentials_secrets_store_arn = db_credentials_secrets_store_arn
         self._db_cluster_arn = db_cluster_arn
         self._database_name = database_name
@@ -33,7 +44,7 @@ class Logger:
         if sql_parameters is None:
             sql_parameters = []
 
-        rds_client.execute_statement(
+        self._rds_client.execute_statement(
             secretArn=self._db_credentials_secrets_store_arn,
             database=self._database_name,
             resourceArn=self._db_cluster_arn,

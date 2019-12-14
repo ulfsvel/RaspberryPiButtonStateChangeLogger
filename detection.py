@@ -15,13 +15,17 @@ event_queue = queue.Queue()
 event_logger = Logger(
     os.environ.get("SECRET_ARN"),
     os.environ.get("RDS_ARN"),
-    os.environ.get("DB_NAME")
+    os.environ.get("DB_NAME"),
+    os.environ.get("AWS_ACCESS_KEY_ID"),
+    os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
 background_logger_thread = BackgroundThread(
     event_queue,
     os.environ.get("SECRET_ARN"),
     os.environ.get("RDS_ARN"),
-    os.environ.get("DB_NAME")
+    os.environ.get("DB_NAME"),
+    os.environ.get("AWS_ACCESS_KEY_ID"),
+    os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
 
 logging.debug("Setting up RDS logging")
