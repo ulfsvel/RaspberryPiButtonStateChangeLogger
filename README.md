@@ -1,4 +1,4 @@
-# RaspberryPiButtonStateChnageLogger
+# RaspberryPiButtonStateChangeLogger
 Logs the changes in state of a button to Aurora Serverless
 
 ## Setting up the project
